@@ -94,7 +94,3 @@ Buka http://localhost:3000.
 | `/api/normality` | POST | `{ items, method, alpha }` |
 
 Semua endpoint menerima data dengan `null` untuk missing values — dihapus via listwise deletion.
-
-## License
-
-MIT
