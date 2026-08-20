@@ -172,8 +172,8 @@ export default function ReliabilityPage() {
 
             <FormulaBox
               title="Rumus Umum Cronbach's Alpha"
-              tex="\\alpha=\\frac{k}{k-1}\\left(1-\\frac{\\sum\\sigma_i^2}{\\sigma_t^2}\\right)"
-              copyTex="\\alpha = \\frac{k}{k-1}\\left(1-\\frac{\\sum \\sigma_i^2}{\\sigma_t^2}\\right)"
+              tex={`\\alpha=\\frac{k}{k-1}\\left(1-\\frac{\\sum\\sigma_i^2}{\\sigma_t^2}\\right)`}
+              copyTex={`\\alpha = \\frac{k}{k-1}(1-\\frac{\\sum \\sigma_i^2}{\\sigma_t^2})`}
             />
 
             <details open className="mb-2.5 rounded-xl border border-edge bg-surface shadow-sm">
@@ -219,7 +219,7 @@ export default function ReliabilityPage() {
 
                 <FormulaBox
                   tex={`\\alpha=\\frac{${result.detailed.k}}{${result.detailed.k - 1}}\\left(1-\\frac{${result.detailed.sumItemVariances.toFixed(4)}}{${result.detailed.totalVariance.toFixed(4)}}\\right)=${result.detailed.alpha.toFixed(4)}`}
-                  copyTex={`\\alpha = \\frac{${result.detailed.k}}{${result.detailed.k - 1}}\\left(1-\\frac{${result.detailed.sumItemVariances.toFixed(4)}}{${result.detailed.totalVariance.toFixed(4)}}\\right) = ${result.detailed.alpha.toFixed(4)}`}
+                  copyTex={`\\alpha = \\frac{${result.detailed.k}}{${result.detailed.k - 1}}(1-\\frac{${result.detailed.sumItemVariances.toFixed(4)}}{${result.detailed.totalVariance.toFixed(4)}}) = ${result.detailed.alpha.toFixed(4)}`}
                 />
               </div>
             </details>
