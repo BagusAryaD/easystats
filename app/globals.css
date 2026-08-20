@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-50: #eef0fd;
+  --color-brand-100: #e0e0f5;
+  --color-brand-500: #4338ca;
+  --color-brand-600: #372fa3;
+  --color-brand-700: #2c27a0;
+  --color-page: #f0f2f8;
+  --color-surface: #ffffff;
+  --color-ink: #1a1a2e;
+  --color-soft: #999999;
+  --color-edge: #eaecf5;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: var(--color-page);
+  color: var(--color-ink);
+  line-height: 1.5;
+}
+
+select,
+input,
+button {
+  font: inherit;
+}
