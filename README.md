@@ -1,53 +1,77 @@
-# GudStat v2
+# EasyStats
 
-Aplikasi uji statistik instrumen penelitian (validitas, reliabilitas, regresi linear
-berganda) dengan narasi siap pakai dan rumus LaTeX yang bisa langsung disalin ke Word.
+Aplikasi web uji statistik instrumen penelitian — upload atau paste data kuesioner, langsung dapatkan hasil uji beserta narasi siap pakai untuk laporan.
 
-Migrasi dari GudStat v1 (PHP murni) → **Next.js + Python**:
+**Live:** easy-stats.vercel.app
 
-- **Frontend:** Next.js (App Router) + TypeScript + Tailwind CSS — UI interaktif,
-  dataset disimpan di `localStorage` browser (serverless = stateless).
-- **Backend statistik:** Python **FastAPI** sebagai serverless functions Vercel
-  (`api/*.py`). Semua hitungan di `statlib/stats.py` — **murni Python stdlib,
-  tanpa numpy/scipy**, sehingga bundle server kecil dan cold start cepat.
-- **LaTeX:** dirender di browser memakai KaTeX; tombol copy menyalin kode LaTeX
-  satu baris yang kompatibel dengan Equation Word.
+## Fitur
 
-## Struktur
+| Fitur | Metode | Output |
+|-------|--------|--------|
+| **Uji Validitas** | Pearson Product Moment / Spearman Rank Order | Koefisien korelasi per item, tabel rekapitulasi, narasi |
+| **Uji Reliabilitas** | Cronbach's Alpha | Nilai alpha, interpretasi, tabel variance per item |
+| **Regresi Linear Berganda** | OLS (X'X)⁻¹X'Y | Persamaan regresi, ANOVA (Uji F), Uji t parsial |
+| **Uji Normalitas** | Shapiro-Wilk / Kolmogorov-Smirnov | Histogram, QQ-Plot, narasi per item |
+
+Semua output dilengkapi:
+- Rumus LaTeX (rendered via KaTeX)
+- Tombol **Copy LaTeX** → paste langsung ke Word Equation editor
+- Narasi berbahasa Indonesia siap pakai
+
+## Tech Stack
+
+| Layer | Teknologi |
+|-------|-----------|
+| Frontend | Next.js 16 (App Router) + TypeScript + Tailwind CSS 4 |
+| Chart | Recharts (histogram & QQ-plot) |
+| LaTeX | KaTeX |
+| Backend | Python FastAPI (serverless functions) |
+| Statistik | **Pure Python stdlib** — zero dependency (tanpa numpy/scipy) |
+| Data | localStorage (browser-side persistence) |
+| Deploy | Vercel (Next.js + Python serverless) |
+
+## Struktur Proyek
 
 ```
-app/                  # Halaman Next.js (App Router)
-  page.tsx            # Landing: upload / paste / demo
-  preview/            # Preview + pengaturan tipe kolom (interaktif)
-  validity/           # Uji validitas
-  reliability/        # Uji reliabilitas (Cronbach's Alpha)
-  regression/         # Uji regresi linear berganda
-  tutorial/           # Tutorial copy LaTeX ke Word
-components/ui.tsx     # Komponen bersama (KaTeX, tombol copy, kartu, dll)
-lib/                  # Parsing CSV, localStorage, API client, tipe
-statlib/stats.py      # Seluruh logika statistik (port dari functions.php)
-api/                  # Endpoint Python (FastAPI)
+app/                    # Halaman Next.js (App Router)
+  page.tsx              # Landing: upload / paste / demo
+  preview/              # Preview data + pengaturan tipe kolom
+  validity/             # Uji validitas (Pearson/Spearman)
+  reliability/          # Uji reliabilitas (Cronbach's Alpha)
+  regression/           # Regresi linear berganda
+  normality/            # Uji normalitas (Shapiro-Wilk/K-S) + histogram + QQ-plot
+  tutorial/             # Tutorial copy LaTeX ke Word
+components/ui.tsx       # Komponen bersama (FormulaBox, CopyButton, StatCard, dll)
+lib/
+  api.ts                # POST JSON helper
+  api-types.ts          # TypeScript response interfaces
+  csv.ts                # CSV parsing + column type detection
+  store.ts              # localStorage persistence
+  types.ts              # Core types (ColumnType, Dataset)
+statlib/stats.py        # Seluruh logika statistik (~900 baris, pure Python)
+api/                    # Endpoint Python (FastAPI serverless)
   validity.py
   reliability.py
   regression.py
-dev_server.py         # Server gabungan untuk dev lokal (tidak dipakai di Vercel)
-public/demo.csv       # Data demo
+  normality.py
+dev_server.py           # Server gabungan untuk dev lokal
+public/demo.csv         # Data demo (51 responden)
+AGENTS.md               # Project summary untuk AI agents
 ```
 
-## Menjalankan secara lokal
+## Menjalankan secara Lokal
 
-Backend Python:
+**Backend Python** (terminal 1):
 
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\pip install -r requirements.txt
-.\.venv\Scripts\python -m uvicorn dev_server:app --port 8000
+$env:LOCAL_PROXY=1; .\.venv\Scripts\python.exe dev_server.py
 ```
 
-Frontend (di terminal kedua):
+**Frontend** (terminal 2):
 
 ```powershell
-$env:LOCAL_PROXY = "1"   # mengaktifkan proxy /api/* ke server Python
 npm install
 npm run dev
 ```
@@ -56,19 +80,21 @@ Buka http://localhost:3000.
 
 ## Deploy ke Vercel
 
-1. Push project ini ke repo GitHub.
-2. Di Vercel, import repo tersebut. Vercel otomatis mendeteksi:
-   - Next.js (dari `package.json`)
-   - Python Functions (dari `api/*.py` + `requirements.txt`)
-3. Tidak ada konfigurasi tambahan yang diperlukan. `/api/validity`,
-   `/api/reliability`, dan `/api/regression` akan berfungsi otomatis.
+1. Push ke repo GitHub.
+2. Import repo di Vercel — otomatis mendeteksi Next.js + Python Functions.
+3. Tidak ada konfigurasi tambahan. Semua endpoint `/api/*` berfungsi otomatis.
 
-## Endpoint API
+## API Endpoints
 
-| Endpoint | Body | Keterangan |
-|---|---|---|
-| `POST /api/validity` | `{ items: { nama: (number\|null)[] }, technique, method }` | Uji validitas item-total / item-total corrected, Pearson / Spearman. |
-| `POST /api/reliability` | `{ items: { nama: (number\|null)[] } }` | Cronbach's Alpha lengkap. |
-| `POST /api/regression` | `{ y: (number\|null)[], x: { nama: (number\|null)[] }, y_name }` | Regresi linear berganda. |
+| Endpoint | Method | Body |
+|----------|--------|------|
+| `/api/validity` | POST | `{ items, technique, method }` |
+| `/api/reliability` | POST | `{ items }` |
+| `/api/regression` | POST | `{ y, x, y_name }` |
+| `/api/normality` | POST | `{ items, method, alpha }` |
 
-Nilai `null` pada array berarti data missing — dihapus via listwise deletion di server.
+Semua endpoint menerima data dengan `null` untuk missing values — dihapus via listwise deletion.
+
+## License
+
+MIT
