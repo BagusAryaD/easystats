@@ -18,9 +18,11 @@ from fastapi import FastAPI
 from api.validity import app as validity_app
 from api.reliability import app as reliability_app
 from api.regression import app as regression_app
+from api.normality import app as normality_app
 
 app = FastAPI(title="GudStat v2 — API Lokal")
 
 app.mount("/api/validity", validity_app)
 app.mount("/api/reliability", reliability_app)
 app.mount("/api/regression", regression_app)
+app.mount("/api/normality", normality_app)

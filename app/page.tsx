@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import {
   ArrowRight,
+  BarChart3,
   BookOpen,
   ClipboardPaste,
   FileSpreadsheet,
@@ -143,13 +144,18 @@ export default function LandingPage() {
   return (
     <main className="pb-10">
       <div className="px-5 pb-3 pt-10 text-center">
-        <div className="mx-auto mb-3 flex h-[48px] w-[48px] items-center justify-center rounded-2xl bg-brand-50">
-          <FileSpreadsheet size={24} className="text-brand-500" />
+        <div className="mx-auto mb-2 flex items-center justify-center gap-2.5">
+          <div className="flex h-[42px] w-[42px] items-center justify-center rounded-xl bg-brand-500 text-white shadow-md">
+            <BarChart3 size={22} />
+          </div>
+          <span className="text-[1.6rem] font-extrabold tracking-tight text-brand-500">
+            EasyStats
+          </span>
         </div>
-        <h1 className="mb-1.5 text-2xl font-extrabold tracking-tight">
-          Uji Validitas &amp; Reliabilitas Instrumen
-        </h1>
-        <p className="mx-auto max-w-[520px] text-[0.92rem] leading-relaxed text-[#666]">
+        <p className="mx-auto max-w-[420px] text-[0.88rem] text-soft">
+          Statistik Mudah untuk Penelitian Anda
+        </p>
+        <p className="mx-auto mt-1 max-w-[480px] text-[0.85rem] leading-relaxed text-[#666]">
           Upload atau paste data kuesioner Anda, langsung dapatkan hasil uji
           statistik beserta narasi siap pakai untuk laporan.
         </p>

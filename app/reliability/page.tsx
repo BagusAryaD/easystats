@@ -173,7 +173,7 @@ export default function ReliabilityPage() {
             <FormulaBox
               title="Rumus Umum Cronbach's Alpha"
               tex="\\alpha=\\frac{k}{k-1}\\left(1-\\frac{\\sum\\sigma_i^2}{\\sigma_t^2}\\right)"
-              copyTex="\alpha = \frac{k}{k-1}\left(1-\frac{\sum \sigma_i^2}{\sigma_t^2}\right)"
+              copyTex="\\alpha = \\frac{k}{k-1}\\left(1-\\frac{\\sum \\sigma_i^2}{\\sigma_t^2}\\right)"
             />
 
             <details open className="mb-2.5 rounded-xl border border-edge bg-surface shadow-sm">

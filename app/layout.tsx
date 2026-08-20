@@ -3,7 +3,7 @@ import "katex/dist/katex.min.css";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Uji Validitas & Reliabilitas Instrumen — Online",
+  title: "EasyStats — Statistik Mudah untuk Penelitian Anda",
   description:
     "Upload atau paste data kuesioner Anda, langsung dapatkan hasil uji statistik beserta narasi siap pakai untuk laporan.",
 };
